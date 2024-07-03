@@ -40,6 +40,14 @@ class DBClient {
   async nbFiles() {
     return this.db.collection('files').countDocuments();
   }
+
+  async findUser(user) {
+    return this.db.collection('users').findOne(user);
+  }
+
+  async insertUser(user) {
+    return this.db.collection('users').insertOne(user);
+  }
 }
 
 const dbClient = new DBClient();
