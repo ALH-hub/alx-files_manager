@@ -13,10 +13,10 @@ export const getStatus = (req, res) => {
   }
 };
 
-export const getStats = (req, res) => {
+export const getStats = async (req, res) => {
   try {
-    const users = dbClient.nbUsers();
-    const files = dbClient.nbFiles();
+    const users = await dbClient.nbUsers();
+    const files = await dbClient.nbFiles();
 
     return res.status(200).json({ users, files });
   } catch (err) {
