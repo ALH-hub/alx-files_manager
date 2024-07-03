@@ -1,4 +1,5 @@
 import sha1 from 'sha1';
+import { ObjectId } from 'mongodb';
 import dbClient from '../utils/db';
 import redisClient from '../utils/redis';
 
@@ -35,7 +36,7 @@ export const getMe = async (req, res) => {
     const _id = await redisClient.get(key);
     if (!_id) return res.status(401).json({ error: 'Unauthorized' });
 
-    const user = await dbClient.findUser({ _id });
+    const user = await dbClient.findUser({ _id: ObjectId(_id) });
     if (!user) return res.status(401).json({ error: 'Unauthorized' });
 
     return res.status(200).json({ id: user._id, email: user.email });
