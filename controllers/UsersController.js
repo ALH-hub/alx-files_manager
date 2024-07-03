@@ -1,7 +1,8 @@
 import sha1 from 'sha1';
 import dbClient from '../utils/db';
+import redisClient from '../utils/redis';
 
-const postNew = async (req, res) => {
+export const postNew = async (req, res) => {
   try {
     const { email, password } = req.body;
 
@@ -26,4 +27,20 @@ const postNew = async (req, res) => {
   }
 };
 
-export default postNew;
+export const getMe = async (req, res) => {
+  try {
+    const token = req.headers['x-token'];
+
+    const key = `auth_${token}`;
+    const _id = await redisClient.get(key);
+    if (!_id) return res.status(401).json({ error: 'Unauthorized' });
+
+    const user = await dbClient.findUser({ _id });
+    if (!user) return res.status(401).json({ error: 'Unauthorized' });
+
+    return res.status(200).json({ id: user._id, email: user.email });
+  } catch (err) {
+    console.log(err);
+    return res.status(500).json({ error: 'server error', status: 500 });
+  }
+};
