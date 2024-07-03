@@ -5,12 +5,12 @@ const postNew = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    if (!email) return res.status(400).json('Missing email');
-    if (!password) return res.status(400).json('Missing password');
+    if (!email) return res.status(400).json({ error: 'Missing email' });
+    if (!password) return res.status(400).json({ error: 'Missing password' });
 
     const exist = await dbClient.findUser({ email });
     if (exist) {
-      return res.status(400).json('Already exist');
+      return res.status(400).json({ error: 'Already exist' });
     }
 
     const hash = sha1(password);
